@@ -7,7 +7,7 @@ entityMatchScore<-function(entityId,contData, baseEntityId) {
     baseEntityPos<-which(gsoData$entityId==baseEntityId)[1]
     suggestionPos<-which(gsoData$entityId==entityId)[1]
     baseEntityName<-as.character(gsoData$entityName[baseEntityPos])
-    sugEntityName<-as.character(gsoData[suggestionPos,7])
+    sugEntityName<-as.character(gsoData$entityName[suggestionPos])
     return(c(baseEntityId, entityId, matchs,baseEntityName,sugEntityName))
 }
 
