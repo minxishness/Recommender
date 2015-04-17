@@ -111,5 +111,3 @@ print("Results")
 testSummary(resTesting)
 print("Random group filtering results")
 testSummary(resTesting1)
-#test addition
-#tes2
