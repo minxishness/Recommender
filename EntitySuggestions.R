@@ -3,7 +3,13 @@ library(plyr)
 #calculate score for an entity pair
 entityMatchScore<-function(entityId,contData, baseEntityId) {    
     occurances<-sum(contData$entityId == entityId)
-    matchs<-occurances/(nrow(contData))^2
+    matchs<-occurances/(nrow(contData))
+    baseGenre<-agData[agData$entityId==baseEntityId,2]
+    entityGenre<-agData[agData$entityId==entityId,2]
+    commonGenre<-length(intersect(baseGenre,entityGenre))
+    totalGenres<-length(entityGenre)+length(baseGenre)
+    if (commonGenre>0) 
+        matchs<-matchs+commonGenre/totalGenres
     baseEntityPos<-which(gsoData$entityId==baseEntityId)[1]
     suggestionPos<-which(gsoData$entityId==entityId)[1]
     baseEntityName<-as.character(gsoData$entityName[baseEntityPos])
@@ -26,6 +32,11 @@ calcEntitySug<-function(entityId) {
 
 begTime <- Sys.time()
 gsoData<-read.csv("GroupMembers17Apr2015.csv")
+agData<-read.csv("artistGenre.csv")
+agData<-agData[,c(3,1)]
+colnames(agData)<-c("entityId", "genre")
+popPos<-which (agData$genre=="POPXXX")
+agData<-agData[-popPos,]
 colnames(gsoData)<-c("favouriteId","userId","entityId","addedDate", "groupId", "isVisible", "entityName", "groupName" )
 gsoData$addedDate<-as.Date(gsoData$addedDate, "%d/%m/%Y")
 gsoData<-arrange(gsoData,desc(addedDate))
@@ -39,6 +50,6 @@ comboRes <- data.frame(matrix(unlist(comboRes), ncol=5, byrow=T))
 colnames(comboRes)<-c("entity1Id", "suggestionId", "score", "EntityName","SuggestionName" )
 comboRes<-arrange(comboRes, desc(score))
 View(comboRes)
-write.csv(comboRes,"newres.csv")
+write.csv(comboRes,"comboRes.csv")
 runTime <- Sys.time()-begTime
 runTime

@@ -3,7 +3,13 @@ library(plyr)
 #calculate score for an entity pair
 entityMatchScore<-function(entityId,contData, baseEntityId) {    
     occurances<-sum(contData$entityId == entityId)
-    matchs<-occurances/(nrow(contData))^2
+    matchs<-occurances/(nrow(contData))
+    baseGenre<-agData[agData$entityId==baseEntityId,2]
+    entityGenre<-agData[agData$entityId==entityId,2]
+    commonGenre<-length(intersect(baseGenre,entityGenre))
+    totalGenres<-length(entityGenre)+length(baseGenre)
+    if (commonGenre>0) 
+        matchs<-matchs+commonGenre/totalGenres
     baseEntityPos<-which(gsoData$entityId==baseEntityId)[1]
     suggestionPos<-which(gsoData$entityId==entityId)[1]
     baseEntityName<-as.character(gsoData$entityName[baseEntityPos])
@@ -27,6 +33,11 @@ calcEntitySug<-function(entityId) {
 begTime <- Sys.time()
 gsoData<-read.csv("recentlyViewed17-Apr-2014.csv")
 colnames(gsoData)<-c("userId","entityId","addedDate", "entityName" )
+agData<-read.csv("artistGenre.csv")
+agData<-agData[,c(3,1)]
+colnames(agData)<-c("entityId", "genre")
+popPos<-which (agData$genre=="POPXXX")
+agData<-agData[-popPos,]
 gsoData$groupId<-paste(gsoData$userId,gsoData$addedDate,sep="")
 #get relevant columns only
 gsData<-gsoData[,c(2,5)]
