@@ -8,7 +8,7 @@ entityMatchScore<-function(entityId,contData, baseEntityId) {
     entityGenre<-agData[agData$entityId==entityId,2]
     commonGenre<-length(intersect(baseGenre,entityGenre))
     totalGenres<-length(entityGenre)+length(baseGenre)
-    if (commonGenre>0) 
+    if (commonGenre>0)
         matchs<-matchs+commonGenre/totalGenres
     baseEntityPos<-which(gsoData$entityId==baseEntityId)[1]
     suggestionPos<-which(gsoData$entityId==entityId)[1]
