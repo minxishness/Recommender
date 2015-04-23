@@ -58,10 +58,10 @@ rwData<-rwoData[,c(2,5)]
 #get Unique entity ID's to get suggestions for
 entitiesUnique<-rwData[,1]
 entitiesUnique<-entitiesUnique[(!duplicated(entitiesUnique))]
-similarRes<-sapply(entitiesUnique,calcEntitySug, gsData=rwData, gsoData=rwoData)
-similarRes <- data.frame(matrix(unlist(similarRes), ncol=5, byrow=T))
-colnames(similarRes)<-c("entity1Id", "suggestionId", "score", "entityName","suggestionName" )
-similarRes$score<-as.numeric(as.character(similarRes$score))
+recentRes<-sapply(entitiesUnique,calcEntitySug, gsData=rwData, gsoData=rwoData)
+recentRes <- data.frame(matrix(unlist(recentRes), ncol=5, byrow=T))
+colnames(recentRes)<-c("entity1Id", "suggestionId", "score", "entityName","suggestionName" )
+recentRes$score<-as.numeric(as.character(recentRes$score))
 
 ########################################################################
 #Get scores based on grops
@@ -87,4 +87,22 @@ groupRes<-arrange(groupRes, desc(score))
 ########################################################################
 #Combine scores
 ########################################################################
-
+comboRes<-merge(recentRes, groupRes, by=c("entity1Id","suggestionId"), all = TRUE)
+comboRes$EntityName<-as.character(comboRes$EntityName)
+comboRes$SuggestionName<-as.character(comboRes$SuggestionName)
+comboRes$entityName<-as.character(comboRes$entityName)
+comboRes$entityName[is.na(comboRes$entityName)]<-comboRes$EntityName[is.na(comboRes$entityName)]
+comboRes$suggestionName<-as.character(comboRes$suggestionName)
+comboRes$suggestionName[is.na(comboRes$suggestionName)]<-comboRes$SuggestionName[is.na(comboRes$suggestionName)]
+comboRes<-comboRes[,-c(7,8)]
+comboRes$score.y[is.na(comboRes$score.y)]<-0
+comboRes$score.x[is.na(comboRes$score.x)]<-0
+comboRes<-comboRes[,c(4,5,3,6,1,2)]
+colnames(comboRes)<-c("entityName", "suggestionName", "recentlyViewedScore", "groupScore", "entity1Id", "suggestionId" )
+#adjust here to weigh towards recentlyViewed or group
+comboRes$finalScore<-comboRes$recentlyViewedScore+comboRes$groupScore
+comboRes<-comboRes[,c(1,2,7,3,4,5,6)]
+comboRes<-arrange(comboRes, desc(finalScore))
+write.csv(comboRes,"comboRes.csv")
+runTime <- Sys.time()-begTime
+runTime
