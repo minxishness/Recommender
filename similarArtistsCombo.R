@@ -10,7 +10,7 @@ entityMatchScore<-function(entityId,contData, baseEntityId, gsoData) {
     totalGenres<-length(entityGenre)+length(baseGenre)
     #adjust here to weigh on genre
     if (commonGenre>0)
-        matchs<-matchs+2*commonGenre/totalGenres
+        matchs<-matchs+commonGenre/totalGenres
     baseEntityPos<-which(gsoData$entityId==baseEntityId)[1]
     suggestionPos<-which(gsoData$entityId==entityId)[1]
     baseEntityName<-as.character(gsoData$entityName[baseEntityPos])
@@ -105,10 +105,11 @@ comboRes$finalScore<-comboRes$recentlyViewedScore+comboRes$groupScore
 comboRes<-comboRes[,c(1,2,7,3,4,5,6)]
 comboRes<-arrange(comboRes, desc(finalScore))
 combineTime<-Sys.time()
-write.csv(comboRes,"comboRes.csv")
+fn<-paste("similarArtistsCombo", Sys.time(),".csv", sep="")
+write.csv(comboRes,fn)
 recentRunTime <- recentTime-begTime
 groupRunTime<-groupTime-recentTime
 comboRunTIme<-comboTime-groupTime
-cat("Recently viewed valc time:", recentRunTime)
+cat("Recently viewed calc time:", recentRunTime)
 cat("Groups valc time:", groupRunTime)
 cat("Combo time", comboRunTIme)

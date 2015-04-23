@@ -51,6 +51,7 @@ colnames(comboResGroups)<-c("entity1Id", "suggestionId", "score", "EntityName","
 comboRes$score<-as.numeric(as.character(comboRes$score))
 comboResGroups<-arrange(comboResGroups, desc(score))
 View(comboResGroups)
-write.csv(comboResGroups,"groupRes.csv")
+fn<-paste("similarArtistsGroupsBased", Sys.time(),,".csv", sep="")
+write.csv(comboResGroups,fn)
 runTime <- Sys.time()-begTime
 runTime

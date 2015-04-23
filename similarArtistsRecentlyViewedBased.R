@@ -49,6 +49,7 @@ comboRes <- data.frame(matrix(unlist(comboRes), ncol=5, byrow=T))
 colnames(comboRes)<-c("entity1Id", "suggestionId", "score", "EntityName","SuggestionName" )
 comboRes<-arrange(comboRes, desc(score))
 View(comboRes)
-write.csv(comboRes,"newres.csv")
+fn<-paste("similarArtistsRecentlyViewed", Sys.time(),".csv", sep="")
+write.csv(comboRes,fn)
 runTime <- Sys.time()-begTime
 runTime

@@ -88,7 +88,8 @@ comboRes <- data.frame(matrix(unlist(comboRes), ncol=3, byrow=T))
 colnames(comboRes)<-c("entityId", "groupId", "score" )
 comboRes<-arrange(comboRes, groupId, desc(score))
 View(comboRes)
-write.csv(comboRes,"newres.csv")
+fn<-paste("groupsEntitySuggestions", Sys.time(),,".csv", sep="")
+write.csv(comboRes,fn)
 runTime <- Sys.time()-begTime
 runTime
 
