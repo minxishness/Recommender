@@ -8,8 +8,9 @@ entityMatchScore<-function(entityId,contData, baseEntityId, gsoData) {
     entityGenre<-agData[agData$entityId==entityId,2]
     commonGenre<-length(intersect(baseGenre,entityGenre))
     totalGenres<-length(entityGenre)+length(baseGenre)
+    #adjust here to weigh on genre
     if (commonGenre>0)
-        matchs<-matchs+commonGenre/totalGenres
+        matchs<-matchs+2*commonGenre/totalGenres
     baseEntityPos<-which(gsoData$entityId==baseEntityId)[1]
     suggestionPos<-which(gsoData$entityId==entityId)[1]
     baseEntityName<-as.character(gsoData$entityName[baseEntityPos])
@@ -64,7 +65,7 @@ colnames(recentRes)<-c("entity1Id", "suggestionId", "score", "entityName","sugge
 recentRes$score<-as.numeric(as.character(recentRes$score))
 
 ########################################################################
-#Get scores based on grops
+#Get scores based on groups
 ########################################################################
 
 colnames(gsoData)<-c("favouriteId","userId","entityId","addedDate", "groupId", "isVisible", "entityName", "groupName" )
