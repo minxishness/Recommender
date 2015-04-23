@@ -63,7 +63,7 @@ recentRes<-sapply(entitiesUnique,calcEntitySug, gsData=rwData, gsoData=rwoData)
 recentRes <- data.frame(matrix(unlist(recentRes), ncol=5, byrow=T))
 colnames(recentRes)<-c("entity1Id", "suggestionId", "score", "entityName","suggestionName" )
 recentRes$score<-as.numeric(as.character(recentRes$score))
-
+recentTime<-Sys.time()
 ########################################################################
 #Get scores based on groups
 ########################################################################
@@ -84,7 +84,7 @@ groupRes <- data.frame(matrix(unlist(groupRes), ncol=5, byrow=T))
 colnames(groupRes)<-c("entity1Id", "suggestionId", "score", "EntityName","SuggestionName" )
 groupRes$score<-as.numeric(as.character(groupRes$score))
 groupRes<-arrange(groupRes, desc(score))
-
+groupTime<-Sys.time()
 ########################################################################
 #Combine scores
 ########################################################################
@@ -104,6 +104,11 @@ colnames(comboRes)<-c("entityName", "suggestionName", "recentlyViewedScore", "gr
 comboRes$finalScore<-comboRes$recentlyViewedScore+comboRes$groupScore
 comboRes<-comboRes[,c(1,2,7,3,4,5,6)]
 comboRes<-arrange(comboRes, desc(finalScore))
+combineTime<-Sys.time()
 write.csv(comboRes,"comboRes.csv")
-runTime <- Sys.time()-begTime
-runTime
+recentRunTime <- recentTime-begTime
+groupRunTime<-groupTime-recentTime
+comboRunTIme<-comboTime-groupTime
+cat("Recently viewed valc time:", recentRunTime)
+cat("Groups valc time:", groupRunTime)
+cat("Combo time", comboRunTIme)
