@@ -18,7 +18,7 @@ entityMatchScore<-function(entityId,contData, baseEntityId, gsoData) {
     return(c(baseEntityId, entityId, matchs,baseEntityName,sugEntityName))
 }
 
-#calculatee scores for all recommendations for an entity
+#calculatee scores for EventsEventsEventsall recommendations for an entity
 calcEntitySug<-function(entityId, gsData, gsoData) {
     #find all groups which contain the entity
     contGroups<-gsData[gsData$entityId %in% entityId, 2]
