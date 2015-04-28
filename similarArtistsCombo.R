@@ -48,6 +48,13 @@ begTime <- Sys.time()
 gsoData<-read.csv("GroupMembers17Apr2015.csv")
 rwoData<-read.csv("recentlyViewed17-Apr-2014.csv")
 colnames(rwoData)<-c("userId","entityId","addedDate", "entityName" )
+
+
+rwoData$addedDate<-as.Date(rwoData$addedDate, "%d/%m/%Y")
+rwoData<-rwoData[rwoData$addedDate>'2014-01-01',]
+
+
+
 agData<-read.csv("artistGenre.csv")
 agData<-agData[,c(3,1)]
 colnames(agData)<-c("entityId", "genre")
@@ -105,11 +112,11 @@ comboRes$finalScore<-comboRes$recentlyViewedScore+comboRes$groupScore
 comboRes<-comboRes[,c(1,2,7,3,4,5,6)]
 comboRes<-arrange(comboRes, desc(finalScore))
 combineTime<-Sys.time()
-fn<-paste("similarArtistsCombo", Sys.time(),".csv", sep="")
+fn<-paste("similarArtistsCombo", Sys.Date(),".csv", sep="")
 write.csv(comboRes,fn)
 recentRunTime <- recentTime-begTime
 groupRunTime<-groupTime-recentTime
-comboRunTIme<-comboTime-groupTime
+comboRunTIme<-combineTime-groupTime
 cat("Recently viewed calc time:", recentRunTime)
-cat("Groups valc time:", groupRunTime)
+cat("Groups calc time:", groupRunTime)
 cat("Combo time", comboRunTIme)
